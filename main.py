@@ -41,16 +41,32 @@ def generation(message):
     markup.row('Создать пароль')
     try:
         number_of_signs = int(message.text)
-        chars = ''
-        chars += ally
-        pwd = ''.join(choices(chars, k=number_of_signs))
-        bot.send_message(message.from_user.id, pwd)
-        bot.send_message(message.from_user.id, 'Готово хотите создать еще пароль?', reply_markup=markup)
-        bot.register_next_step_handler(message, how_generation)
+        if number_of_signs < 128:
+            chars = ''
+            chars += ally
+            pwd = ''.join(choices(chars, k=number_of_signs))
+            bot.send_message(message.from_user.id, pwd)
+            bot.send_message(message.from_user.id, 'Готово хотите создать еще пароль?', reply_markup=markup)
+            bot.register_next_step_handler(message, how_generation)
+        elif number_of_signs < 0:
+            mark = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+            mark.row('Создать пароль')
+            bot.send_message(message.from_user.id, 'Пишите только положительные цифры!', reply_markup=mark)
+            bot.register_next_step_handler(message, how_generation)
+        elif number_of_signs > 128:
+            mark = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+            mark.row('Создать пароль')
+            bot.send_message(message.from_user.id, 'Недопустимое значение', reply_markup=mark)
+            bot.register_next_step_handler(message, how_generation)
     except ValueError:
         mark = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
         mark.row('Создать пароль')
         bot.send_message(message.from_user.id, 'Пишите только цифры!', reply_markup=mark)
+        bot.register_next_step_handler(message, how_generation)
+    except telebot.apihelper.ApiTelegramException:
+        mark = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        mark.row('Создать пароль')
+        bot.send_message(message.from_user.id, 'Пишите только положительные цифры!', reply_markup=mark)
         bot.register_next_step_handler(message, how_generation)
 
 bot.polling()
