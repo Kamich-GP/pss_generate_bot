@@ -41,7 +41,7 @@ def generation(message):
     markup.row('Создать пароль')
     try:
         number_of_signs = int(message.text)
-        if number_of_signs < 64:
+        if number_of_signs <= 64:
             chars = ''
             chars += ally
             pwd = ''.join(choices(chars, k=number_of_signs))
