@@ -41,7 +41,7 @@ def generation(message):
     markup.row('Создать пароль')
     try:
         number_of_signs = int(message.text)
-        if number_of_signs < 128:
+        if number_of_signs < 64:
             chars = ''
             chars += ally
             pwd = ''.join(choices(chars, k=number_of_signs))
@@ -53,7 +53,7 @@ def generation(message):
             mark.row('Создать пароль')
             bot.send_message(message.from_user.id, 'Пишите только положительные цифры!', reply_markup=mark)
             bot.register_next_step_handler(message, how_generation)
-        elif number_of_signs > 128:
+        elif number_of_signs > 64:
             mark = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
             mark.row('Создать пароль')
             bot.send_message(message.from_user.id, 'Недопустимое значение', reply_markup=mark)
